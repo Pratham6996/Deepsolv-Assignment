@@ -12,18 +12,18 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from sqlalchemy.orm import sessionmaker
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'database')))
-from model import engine, Page  # Ensure correct import path
+from model import engine, Page  
 
-# Load environment variables
+
 load_dotenv()
 
 LINKEDIN_EMAIL = os.getenv("LINKEDIN_EMAIL")
 LINKEDIN_PASSWORD = os.getenv("LINKEDIN_PASSWORD")
 
 
-# Set up Selenium WebDriver
+
 options = Options()
-options.add_argument("--headless")  # Run in background
+options.add_argument("--headless") 
 options.add_argument("--disable-gpu")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
@@ -43,7 +43,7 @@ def linkedin_login():
     password_input.send_keys(Keys.RETURN)
 
     time.sleep(5)
-    print(" Login successful!")
+  
 
 def scrape_company_details(company_url):
     """Scrapes company details from a LinkedIn company page."""
@@ -56,7 +56,7 @@ def scrape_company_details(company_url):
         name = None
 
     try:
-        description = driver.find_element(By.XPATH, '//section/p').text  # Adjust if needed
+        description = driver.find_element(By.XPATH, '//section/p').text  
     except:
         description = None
 
@@ -77,7 +77,7 @@ def scrape_company_details(company_url):
 
     try:
         followers_text = driver.find_element(By.CSS_SELECTOR, "section dl dd:nth-child(9)").text
-        followers = int(re.sub(r"[^\d]", "", followers_text))  # Extract only numbers
+        followers = int(re.sub(r"[^\d]", "", followers_text))  
     except:
         followers = None
 
@@ -96,14 +96,14 @@ def scrape_company_details(company_url):
 
     try:
         profile_picture_element = driver.find_element(By.CSS_SELECTOR, ".org-top-card-primary-content__logo")
-        profile_picture = profile_picture_element.get_attribute("src")  # Extract the image URL
+        profile_picture = profile_picture_element.get_attribute("src") 
     except:
         profile_picture = None
 
 
 
 
-    # Store in database
+    
     Session = sessionmaker(bind=engine)
     session = Session()
 
@@ -128,7 +128,7 @@ def scrape_company_details(company_url):
 
 if __name__ == "__main__":
     linkedin_login()
-    company_url = "https://www.linkedin.com/company/microsoft/about/"  # Change as needed
+    company_url = "https://www.linkedin.com/company/microsoft/about/"  
     scrape_company_details(company_url)
     driver.quit()
 

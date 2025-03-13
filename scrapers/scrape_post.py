@@ -12,18 +12,18 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from sqlalchemy.orm import sessionmaker
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'database')))
-from model import engine, Post  # Ensure correct import path
+from model import engine, Post  
 
-# Load environment variables
+
 load_dotenv()
 
 LINKEDIN_EMAIL = os.getenv("LINKEDIN_EMAIL")
 LINKEDIN_PASSWORD = os.getenv("LINKEDIN_PASSWORD")
 
 
-# Set up Selenium WebDriver
+
 options = Options()
-options.add_argument("--headless")  # Run in background
+options.add_argument("--headless")  
 options.add_argument("--disable-gpu")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
@@ -72,7 +72,7 @@ def scrape_company_details(company_url):
     
 
 
-    # Store in database
+    
     Session = sessionmaker(bind=engine)
     session = Session()
 
@@ -92,7 +92,7 @@ def scrape_company_details(company_url):
 
 if __name__ == "__main__":
     linkedin_login()
-    company_url = "https://www.linkedin.com/company/microsoft/posts/"  # Change as needed
+    company_url = "https://www.linkedin.com/company/microsoft/posts/"  
     scrape_company_details(company_url)
     driver.quit()
 
