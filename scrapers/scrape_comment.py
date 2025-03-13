@@ -12,7 +12,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from sqlalchemy.orm import sessionmaker
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'database')))
-from model import engine, Post  # Ensure correct import path
+from model import engine, Comment  # Ensure correct import path
 
 # Load environment variables
 load_dotenv()
@@ -56,11 +56,14 @@ def scrape_company_details(company_url):
         content = "No content"
 
     try:
-       post_url = driver.find_element(By.CSS_SELECTOR, "a.feed-shared-control-menu__content.artdeco-dropdown__content.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--has-arrow.artdeco-dropdown__content--arrow-right.artdeco-dropdown__content--justification-right.artdeco-dropdown__content--placement-bottom.ember-view").get_attribute("href")
+       post_id = driver.find_element(By.CSS_SELECTOR, "a.feed-shared-control-menu__content.artdeco-dropdown__content.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--has-arrow.artdeco-dropdown__content--arrow-right.artdeco-dropdown__content--justification-right.artdeco-dropdown__content--placement-bottom.ember-view").get_attribute("href")
     except:
-        post_url = "No post url"
+        post_id = "No post url"
 
-
+    try:
+       user_name = driver.find_element(By.CSS_SELECTOR, "a.feed-shared-control-menu__content.artdeco-dropdown__content.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--has-arrow.artdeco-dropdown__content--arrow-right.artdeco-dropdown__content--justification-right.artdeco-dropdown__content--placement-bottom.ember-view").get_attribute("href")
+    except:
+        user_name = "No user name"
 
 
 
@@ -79,8 +82,9 @@ def scrape_company_details(company_url):
     company = Post(
         page_id=company_url.rstrip('/').split("/")[-2], 
         content=content,
-        post_url=post_url,
+        user_name=user_name,
         created_at=created_at,
+        post_id=post_id,
         
     )
 
